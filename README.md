@@ -1,34 +1,28 @@
+# 🤖 Igbo-Phi3-Bilingual-Chat
 
-# 🤖 Igbo-Phi3-Bilingual-Chat (GGUF & Colab Training)
+<div align="center">
 
-This repository contains the source code, training notebooks, and inference scripts for **Igbo-Phi3-Bilingual-Chat**.
+![Igbo-AI-Banner](https://img.shields.io/badge/Igbo-AI-green?style=for-the-badge) 
+[![Hugging Face GGUF](https://img.shields.io/badge/🤗%20Hugging%20Face-GGUF%20(Local)-orange?style=for-the-badge)](https://huggingface.co/nwokikeonyeka/Igbo-Phi3-Bilingual-Chat-v1-merged-Q5_K_M-GGUF)
+[![Hugging Face Merged](https://img.shields.io/badge/🤗%20Hugging%20Face-Master%20Weights%20(Dev)-yellow?style=for-the-badge)](https://huggingface.co/nwokikeonyeka/Igbo-Phi3-Bilingual-Chat-v1-merged)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-Unlike my previous "Translator" project, this model is a **fully conversational AI**. It can chat, reason, and define words in both Igbo and English, while retaining the general intelligence of the base Phi-3 model.
+</div>
 
-* **Hugging Face (GGUF):** [nwokikeonyeka/Igbo-Phi3-Bilingual-Chat-v1-merged-Q5_K_M-GGUF](https://huggingface.co/nwokikeonyeka/Igbo-Phi3-Bilingual-Chat-v1-merged-Q5_K_M-GGUF)
-* **Base Model:** Microsoft Phi-3-mini-4k-instruct
-* **Dataset:** 700k+ mixed examples (Igbo sentences, Dictionary, and UltraChat)
+A specialized **Bilingual AI Assistant** trained to converse fluently in **Igbo** and **English**. 
+
+Unlike my previous attempt which was a simple translation model, this AI is a **conversational agent**. It can chat, explain concepts, reason, and define words in both languages while retaining the general intelligence of its base model (Phi-3).
 
 ---
 
-## 🚀 How to Run (Python / Local)
+## 📥 Download Models
 
-You can run this model on your laptop (Windows/Mac/Linux) using Python. It uses the GGUF format, so it is fast and requires very little RAM.
+| Version | Best For... | Link |
+| :--- | :--- | :--- |
+| **GGUF (Q5_K_M)** | **Running locally** on laptops (Mac/Windows/Linux). Fast & Low RAM. | [👉 Download Here](https://huggingface.co/nwokikeonyeka/Igbo-Phi3-Bilingual-Chat-v1-merged-Q5_K_M-GGUF) |
+| **Merged (F16)** | **Developers** who want to fine-tune further or use PyTorch. | [👉 Download Here](https://huggingface.co/nwokikeonyeka/Igbo-Phi3-Bilingual-Chat-v1-merged) |
 
-### 1. Install Dependencies
-```bash
-pip install llama-cpp-python huggingface_hub
-````
-
-### 2\. Run the Chat Script
-
-Copy `chat.py` (code provided in this repo) and run it:
-
-```bash
-python chat.py
-```
-
------
+---
 
 ## ⚡ Quick Colab Demo
 
@@ -64,33 +58,60 @@ while True:
     print(f"AI: {output['choices'][0]['text']}")
 ```
 
+---
+
+## 📚 Training Data & Credits
+
+This model was trained on a curated mix of over **700,000 examples** to ensure a balance between language fluency and general logic. Grateful acknowledgment to the creators of these open datasets:
+
+1.  **Fluency (522k pairs):** [ccibeekeoc42/english_to_igbo](https://huggingface.co/datasets/ccibeekeoc42/english_to_igbo)  
+    *Primary source for sentence-level translation and grammar.*
+2.  **Vocabulary (5k definitions):** [nkowaokwu/ibo-dict](https://huggingface.co/datasets/nkowaokwu/ibo-dict)  
+    *Provides deep knowledge of specific Igbo words and definitions.*
+3.  **General Memory (200k chats):** [HuggingFaceH4/ultrachat_200k](https://huggingface.co/datasets/HuggingFaceH4/ultrachat_200k)  
+    *Used to maintain the model's ability to chat, reason, and follow instructions without "forgetting" general knowledge.*
+
+---
+
+## 🚀 Quick Start (Local)
+
+You can run the GGUF model on any computer with Python installed.
+
+### 1. Install Dependencies
+```bash
+pip install llama-cpp-python huggingface_hub
+````
+
+### 2\. Run the Chat Script
+
+Download the `chat.py` file from this repository and run it:
+
+```bash
+python chat.py
+```
+
 -----
 
 ## 🧠 Training Methodology: "The Colab Relay Race"
 
-Training a full LLM on a free Google Colab GPU usually causes timeouts (disconnects) before the training is finished. To solve this, I used a **"Relay Race"** strategy.
+Training a full LLM on a free Google Colab GPU usually causes timeouts before completion. This project used a **"Relay Race" strategy**:
 
-### The Strategy
+1.  **Checkpointing:** The training script saves progress every 500 steps to Hugging Face.
+2.  **Resuming:** When Colab times out (approx. every 4 hours), a new session is started.
+3.  **Relaying:** The script automatically pulls the last checkpoint and resumes training exactly where it stopped.
 
-1.  **Auto-Save:** The training script saves a "Checkpoint" to Hugging Face every 500 steps.
-2.  **Resume:** When Colab times out (after \~4 hours), a new session is started.
-3.  **Relay:** The script automatically downloads the last checkpoint from Hugging Face and continues training exactly where it left off.
+**Stats:**
 
-This allowed me to train for **44,500 steps** (over 700k examples) across multiple free sessions without losing progress.
-
-### Datasets Used
-
-To create a "Bilingual Brain" rather than just a translator, I combined three datasets:
-
-1.  **Fluency:** \~522k English-Igbo sentence pairs.
-2.  **Vocabulary:** \~5k Igbo Dictionary definitions.
-3.  **Memory:** \~200k General Chat conversations (UltraChat) to prevent the model from forgetting English or general logic.
+  * **Base Model:** Microsoft Phi-3-mini-4k-instruct
+  * **Total Steps:** 44,500
+  * **Epochs:** 1
+  * **Training Time:** \~20 Hours (across multiple sessions)
 
 -----
 
-## 🛠️ Prompt Format
+## 🛠️ Prompt Template
 
-This model uses the standard **Phi-3** format. If you use it in other apps (like Ollama or LM Studio), ensure you use this template:
+If you use this model in **Ollama**, **LM Studio**, or **Jan.ai**, ensure you use the **Phi-3** prompt format for the best results:
 
 ```text
 <s><|user|>
@@ -98,5 +119,3 @@ This model uses the standard **Phi-3** format. If you use it in other apps (like
 <|assistant|>
 {AI Response Here}<|end|>
 ```
-
-````
